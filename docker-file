@@ -1,6 +1,6 @@
 # first stage
 FROM python:3.8 AS builder
-COPY /Users/salimelattuparembil/PycharmProjects/flask-3/venv/requirements.txt .
+COPY requirements.txt .
 
 # install dependencies to the local user directory (eg. /root/.local)
 RUN pip install --user -r requirements.txt
