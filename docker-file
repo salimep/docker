@@ -1,18 +1,8 @@
-# first stage
-FROM python:3.8 AS builder
-COPY requirements.txt .
+FROM python:3.8
+WORKDIR /opt
+RUN  apt-get update && apt-get install -y bash
+COPY ./requirements.txt /opt/
+RUN pip install -r requirements.txt
+COPY  ./hello-flask.py /opt/
 
-# install dependencies to the local user directory (eg. /root/.local)
-RUN pip install --user -r requirements.txt
-
-# second unnamed stage
-FROM python:3.8-slim
-WORKDIR /code
- 
-# copy only the dependencies installation from the 1st stage image
-COPY --from=builder /root/.local/bin /root/.local
-
-# update PATH environment variable
-ENV PATH=/root/.local:$PATH
-
-CMD [ "python", "./hello-flask.py" ]
+ENTRYPOINT [ "python","./hello-flask.py"]
