@@ -1,0 +1,38 @@
+version: '3.3'
+services:
+  sqldb:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'blog'
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'salim'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 'salim123'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - '3306:3306'
+    expose:
+      # Opens port 3306 on the containerdd
+      - '3306'
+      # Where our data will be persisted
+    volumes:
+      - my-db:/var/lib/mysql2
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  flask-app:
+     build: .
+     environment:
+       mysql_host: 'sqldb'
+       mysql_user: 'salim'
+     ports:  
+       - '80:5000'
+     depends_on:
+       - sqldb
+     links:
+       - sqldb
+   
+# Names our volume
+volumes:
+  my-db:
