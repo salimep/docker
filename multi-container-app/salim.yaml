@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app-deployment
+  labels:
+    app: flask
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: flask
+  template:
+    metadata:
+      labels:
+        app: flask
+    spec:
+      containers:
+      - name: flask-app
+        image: salimep/flask-app:v2
+        ports:
+        - containerPort: 5000
+        env:
+         - name: mysql_user
+           valueFrom:
+             secretKeyRef:
+              name: db-login
+              key: mysql_user
+         - name: mysql_passwd
+           valueFrom:
+             secretKeyRef:
+              name: db-login
+              key: mysql_passwd
